@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <GL/glut.h>
 #include <math.h>
+//#include "glm.h"
+//#include "imageloader.h"
 
 static int shoulder = 0, lshoulder2 = 0, rshoulder2 = 0, shoulder2 = 0, elbow = 0, elbow2 = 0, rfingerBase = 0, rfingerUp = 0;
 static int lfingerBase = 0, lfingerUp = 0, rhip = 0, rhip2 = 0, rknee = 0, lknee = 0, lhip = 0, lhip2 = 0, trunk = 0;
@@ -14,8 +16,47 @@ GLfloat angle = 180;  /* in degrees */
 GLfloat angle2 = 90;  /* in degrees */
 GLfloat angle3 = 180; /* in degrees */
 
+// RGBA
+GLfloat light_ambient[] = { 0.0, 0.0, 0.0, 0.0 };
+GLfloat light_diffuse[] = { 0.5, 0.5, 0.5,1.0 };
+GLfloat light_specular[] = {1.0, 1.0, 1.0, 1.0 };
+// x , y, z, w
+GLfloat light_position[] = {0.5,5.0, 0.0, 1.0 };
+GLfloat lightPos1[] = {-0.5,-5.0,-2.0, 1.0 };
+// Material Properties
+GLfloat mat_amb_diff[] = {0.643, 0.753, 0.934, 1.0 };
+GLfloat mat_specular[] = { 0.0, 0.0, 0.0, 1.0 };
+GLfloat shininess[] = {100.0 };  
 void init(void)
-{
+{	
+		GLfloat lightColor1[] = {1.0f, 1.0f,  1.0f, 1.0f };
+		// Turn on the power
+        glEnable(GL_LIGHTING);
+        // Flip light switch
+        glEnable(GL_LIGHT0);
+        glEnable(GL_LIGHT1);
+        // assign light parameters
+		glEnable(GL_COLOR_MATERIAL);
+        glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+        glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+        glLightfv(GL_LIGHT1, GL_AMBIENT, light_ambient);
+        glLightfv(GL_LIGHT1, GL_DIFFUSE, light_diffuse);
+        glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular);
+	// Material Properties         
+        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE,mat_amb_diff);
+        glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+        glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
+
+        glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColor1);
+        glLightfv(GL_LIGHT1, GL_POSITION, lightPos1);
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor1);
+        glEnable(GL_NORMALIZE);
+        //Enable smooth shading
+        glShadeModel(GL_SMOOTH);
+        // Enable Depth buffer
+        glEnable(GL_DEPTH_TEST);
+
 	glMatrixMode(GL_PROJECTION);
 	gluPerspective(65.0, (GLfloat)1024 / (GLfloat)869, 1.0, 60.0);
 
@@ -168,7 +209,8 @@ void draw_right_arm(void)
 	glTranslatef(1, 0, 0);
 	glPushMatrix();
 	glScalef(2.0, 0.8, 1.0);
-	glutWireCube(1.0);
+	glColor3f(1, 0, 0.2);
+	glutSolidCube(1.0);
 	glPopMatrix();
 
 	glTranslatef(1, 0, 0.0);
@@ -176,7 +218,8 @@ void draw_right_arm(void)
 	glTranslatef(1.0, 0.0, 0.0);
 	glPushMatrix();
 	glScalef(2.0, 0.6, 1.0);
-	glutWireCube(1.0);
+	glColor3f(0.9, 0.8, 1.0);
+	glutSolidCube(1.0);
 	glPopMatrix();
 
 	//Draw finger flang c
@@ -186,7 +229,7 @@ void draw_right_arm(void)
 	glTranslatef(0.15, 0.0, 0.0);
 	glPushMatrix();
 	glScalef(0.3, 0.1, 0.1);
-	glutWireCube(1);
+	glutSolidCube(1);
 	glPopMatrix();
 
 	//Draw finger flang d
@@ -206,7 +249,7 @@ void draw_right_arm(void)
 	glTranslatef(0.15, 0.0, 0.0);
 	glPushMatrix();
 	glScalef(0.3, 0.1, 0.1);
-	glutWireCube(1);
+	glutSolidCube(1);
 	glPopMatrix();
 
 	//Draw finger flang b
@@ -226,7 +269,7 @@ void draw_right_arm(void)
 	glTranslatef(0.15, 0.0, 0.0);
 	glPushMatrix();
 	glScalef(0.3, 0.1, 0.1);
-	glutWireCube(1);
+	glutSolidCube(1);
 	glPopMatrix();
 
 	//Draw finger flang f
@@ -246,7 +289,7 @@ void draw_right_arm(void)
 	glTranslatef(0.15, 0.0, 0.0);
 	glPushMatrix();
 	glScalef(0.3, 0.1, 0.1);
-	glutWireCube(1);
+	glutSolidCube(1);
 	glPopMatrix();
 
 	//Draw finger flang h
@@ -274,7 +317,8 @@ void draw_left_arm(void)
 	glTranslatef(1, 0, 0);
 	glPushMatrix();
 	glScalef(2.0, 0.8, 1.0);
-	glutWireCube(1.0);
+	glColor3f(1, 0, 0.2);
+	glutSolidCube(1.0);
 	glPopMatrix();
 
 	glTranslatef(1, 0, 0.0);
@@ -282,7 +326,9 @@ void draw_left_arm(void)
 	glTranslatef(1.0, 0.0, 0.0);
 	glPushMatrix();
 	glScalef(2.0, 0.6, 1.0);
-	glutWireCube(1.0);
+	glColor3f(0.9, 0.8, 1.0);
+	glColor3f(0.9, 0.8, 1.0);
+	glutSolidCube(1.0);
 	glPopMatrix();
 
 	//Draw finger flang c
@@ -292,7 +338,7 @@ void draw_left_arm(void)
 	glTranslatef(0.15, 0.0, 0.0);
 	glPushMatrix();
 	glScalef(0.3, 0.1, 0.1);
-	glutWireCube(1);
+	glutSolidCube(1);
 	glPopMatrix();
 
 	//Draw finger flang d
@@ -312,7 +358,7 @@ void draw_left_arm(void)
 	glTranslatef(0.15, 0.0, 0.0);
 	glPushMatrix();
 	glScalef(0.3, 0.1, 0.1);
-	glutWireCube(1);
+	glutSolidCube(1);
 	glPopMatrix();
 
 	//Draw finger flang b
@@ -332,7 +378,7 @@ void draw_left_arm(void)
 	glTranslatef(0.15, 0.0, 0.0);
 	glPushMatrix();
 	glScalef(0.3, 0.1, 0.1);
-	glutWireCube(1);
+	glutSolidCube(1);
 	glPopMatrix();
 
 	//Draw finger flang f
@@ -352,7 +398,7 @@ void draw_left_arm(void)
 	glTranslatef(0.15, 0.0, 0.0);
 	glPushMatrix();
 	glScalef(0.3, 0.1, 0.1);
-	glutWireCube(1);
+	glutSolidCube(1);
 	glPopMatrix();
 
 	//Draw finger flang h
@@ -380,7 +426,8 @@ void draw_righ_leg(void)
 	glTranslatef(1.5, 0, 0);
 	glPushMatrix();
 	glScalef(3.0, 1.5, 1.0);
-	glutWireCube(1.0);
+	glColor3f(0.2, 0.0, 1.0);
+	glutSolidCube(1.0);
 	glPopMatrix();
 
 	glTranslatef(1.5, 0, 0.0);
@@ -388,11 +435,13 @@ void draw_righ_leg(void)
 	glTranslatef(1.5, 0.0, 0.0);
 	glPushMatrix();
 	glScalef(3.0, 1., 1.0);
-	glutWireCube(1.0);
+	glColor3f(0.9, 0.8, 1.0);
+	glutSolidCube(1.0);
 	glPopMatrix();
 	glTranslatef(2, 0.0, 0.0);
 	glPushMatrix();
 	glScalef(1, 1, 2);
+	glColor3f(0, 0.0, 0.0);
 	glutSolidCube(1);
 	glPopMatrix();
 
@@ -411,7 +460,8 @@ void draw_left_leg(void)
 	glTranslatef(1.5, 0, 0);
 	glPushMatrix();
 	glScalef(3.0, 1.5, 1.0);
-	glutWireCube(1.0);
+	glColor3f(0.2, 0, 1.0);
+	glutSolidCube(1.0);
 	glPopMatrix();
 
 	glTranslatef(1.5, 0, 0.0);
@@ -419,11 +469,13 @@ void draw_left_leg(void)
 	glTranslatef(1.5, 0.0, 0.0);
 	glPushMatrix();
 	glScalef(3.0, 1., 1.0);
-	glutWireCube(1.0);
+	glColor3f(0.9, 0.8, 1.0);
+	glutSolidCube(1.0);
 	glPopMatrix();
 	glTranslatef(2, 0.0, 0.0);
 	glPushMatrix();
 	glScalef(1, 1, 2);
+	glColor3f(0.0, 0.0, 0.0);
 	glutSolidCube(1);
 	glPopMatrix();
 
@@ -432,26 +484,38 @@ void draw_left_leg(void)
 
 void display(void)
 {
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glShadeModel(GL_SMOOTH);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(eye[0], eye[1], eye[2], center[0], center[1], center[2], up[0], up[1], up[2]);
 
-	// draw trunck
+	glPushMatrix();
+    glLightfv(GL_LIGHT1, GL_POSITION, lightPos1);
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    glPopMatrix();
+    //materials properties
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE,mat_amb_diff);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+    glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
+
+	//draw floor
 	draw_floor();
+	// draw trunck
+	glColor3f(1, 0, 0.2);
 	glPushMatrix();
 	glTranslatef(0, -2.5, 0);
 	glRotatef((GLfloat)trunk, 1, 0, 0);
 	glTranslatef(0, 2.5, 0);
 	glPushMatrix();
 	glScalef(5, 5, 2);
-	glutWireCube(1.0);
+	glutSolidCube(1.0);
 	glPopMatrix();
 
 	glPushMatrix();
 	glTranslatef(0, 4, 0);
+	glColor3f(0.9, 0.8, 1.0);
 	glutSolidSphere(1.0, 50, 50);
 	glPopMatrix();
 
