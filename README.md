@@ -7,7 +7,7 @@
 |**Mohamed Gamal** |2 |20|
 
 #### We made a graphic design about gym and made 2 animations using timer function (**glutTimerFunc()**) and Swap Buffer (**glutSwapBuffers()**).
-Exmple
+Example
 ```sh
 void timer(int value)
 {
