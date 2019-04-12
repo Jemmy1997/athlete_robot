@@ -210,6 +210,7 @@ void drawmodel1(void)
 	glmVertexNormals(pmodel1, 90.0);
 	glmScale(pmodel1, 2);
 	glmDraw(pmodel1, GLM_SMOOTH | GLM_MATERIAL);
+	glEnable(GL_COLOR_MATERIAL);
 }
 /* void drawmodel2(void)
 {
@@ -469,9 +470,6 @@ void draw_left_arm(void)
 	{
 		glRotatef(90, 0, 1, 0);
 		drawmodel1();
-	}
-	else
-	{
 	}
 
 	glPopMatrix();
@@ -822,7 +820,7 @@ void texture_mode(int value)
 }
 void Animation_mode(int value)
 {
-	bool flag = false;
+	flag = false;
 	char *name = 0;
 	switch (value)
 	{
