@@ -3,6 +3,10 @@
 #include <GL/glut.h>
 #include "glm.h"
 #include "imageloader.h"
+bool flag = false;
+int state = -1;
+
+GLMmodel *pmodel1 = glmReadOBJ("data/10499_Dumbells_v1_L3.obj");
 
 static int shoulder = 0, lshoulder2 = 0, rshoulder2 = 0, shoulder2 = 0, elbow = 0, elbow2 = 0, rfingerBase = 0, rfingerUp = 0;
 static int lfingerBase = 0, lfingerUp = 0, rhip = 0, rhip2 = 0, rknee = 0, lknee = 0, lhip = 0, lhip2 = 0, trunk = 0;
@@ -199,6 +203,22 @@ void moveBack()
 	center[1] -= direction[1] * speed;
 	center[2] -= direction[2] * speed;
 }
+void drawmodel1(void)
+{
+	glmUnitize(pmodel1);
+	glmFacetNormals(pmodel1);
+	glmVertexNormals(pmodel1, 90.0);
+	glmScale(pmodel1, 2);
+	glmDraw(pmodel1, GLM_SMOOTH | GLM_MATERIAL);
+}
+/* void drawmodel2(void)
+{
+	glmUnitize(pmodel2);
+	glmFacetNormals(pmodel2);
+	glmVertexNormals(pmodel2, 90.0);
+	glmScale(pmodel2, 2);
+	glmDraw(pmodel2, GLM_SMOOTH | GLM_MATERIAL);
+} */
 
 void draw_floor(void)
 {
@@ -232,6 +252,7 @@ void draw_floor(void)
 
 void draw_right_arm(void)
 {
+
 	glPushMatrix();
 
 	glTranslatef(-3, 2.5, 0.0);
@@ -443,6 +464,15 @@ void draw_left_arm(void)
 	glutSolidCube(1);
 	glPopMatrix();
 	glPopMatrix();
+	glTranslatef(1, 0, 0);
+	if (flag)
+	{
+		glRotatef(90, 0, 1, 0);
+		drawmodel1();
+	}
+	else
+	{
+	}
 
 	glPopMatrix();
 }
@@ -771,6 +801,7 @@ void keyboard(unsigned char key, int x, int y)
 }
 void texture_mode(int value)
 {
+
 	switch (value)
 	{
 	case 1:
@@ -786,9 +817,42 @@ void texture_mode(int value)
 		_textureId = _textureId_ceramics;
 		break;
 	}
+
 	glutPostRedisplay();
 }
+void Animation_mode(int value)
+{
+	bool flag = false;
+	char *name = 0;
+	switch (value)
+	{
+	case '5':
+	{
+		shoulder = -90;
+		shoulder2 = 90;
+		flag = true;
+		state = 0;
+		break;
+	}
+	}
+}
+void timer(int state)
+{
+	if (state == 0)
+	{
 
+		if (shoulder < 0)
+			shoulder = (shoulder + 3) % 360;
+		if (shoulder > 0)
+			shoulder = (shoulder - 3) % 360;
+		if (shoulder2 > 0)
+			shoulder2 = (shoulder2 - 3) % 360;
+		if (shoulder2 < 0)
+			shoulder2 = (shoulder2 + 3) % 360;
+		glutPostRedisplay();
+		glutTimerFunc(30, timer, 0);
+	}
+}
 void main_menu(int value)
 {
 	if (value == 666)
@@ -797,6 +861,7 @@ void main_menu(int value)
 int main(int argc, char **argv)
 {
 	int submenu;
+	int Animenu;
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
@@ -810,13 +875,19 @@ int main(int argc, char **argv)
 	glutAddMenuEntry("Stone", 2);
 	glutAddMenuEntry("Cement", 3);
 	glutAddMenuEntry("Ceramics", 4);
+	Animenu = glutCreateMenu(Animation_mode);
+	glutAddMenuEntry("Dumbbell", '5');
 	glutSpecialFunc(specialKeys);
 	glutCreateMenu(main_menu);
 	glutAddMenuEntry("Quit", 666);
 	glutAddSubMenu("Texture mode", submenu);
+	glutAddSubMenu("Animation mode", Animenu);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 	glutKeyboardFunc(keyboard);
+	glutTimerFunc(0, timer, 0);
+	glutTimerFunc(0, timer, 1);
 
 	glutMainLoop();
 	return 0;
 }
+
