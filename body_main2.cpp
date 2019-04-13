@@ -3,9 +3,13 @@
 #include <GL/glut.h>
 #include "glm.h"
 #include "imageloader.h"
+#include <iostream>
 bool flag = false;
 int state = -1;
 
+int  step =-10;
+int hstep=-5;
+int shstep=10;
 GLMmodel *pmodel1 = glmReadOBJ("data/10499_Dumbells_v1_L3.obj");
 
 static int shoulder = 0, lshoulder2 = 0, rshoulder2 = 0, shoulder2 = 0, elbow = 0, elbow2 = 0, rfingerBase = 0, rfingerUp = 0;
@@ -826,31 +830,120 @@ void Animation_mode(int value)
 	{
 	case '5':
 	{
-		shoulder = -90;
-		shoulder2 = 90;
+		shoulder = -10;
+		shoulder2 = 0;
+		rhip=0;
+		lhip=-0;
 		flag = true;
 		state = 0;
 		break;
 	}
-	}
-}
-void timer(int state)
-{
-	if (state == 0)
+	case '6':
 	{
-
-		if (shoulder < 0)
-			shoulder = (shoulder + 3) % 360;
-		if (shoulder > 0)
-			shoulder = (shoulder - 3) % 360;
-		if (shoulder2 > 0)
-			shoulder2 = (shoulder2 - 3) % 360;
-		if (shoulder2 < 0)
-			shoulder2 = (shoulder2 + 3) % 360;
-		glutPostRedisplay();
-		glutTimerFunc(30, timer, 0);
+		shoulder = -10;
+		shoulder2 = 10;
+		rhip=5;
+		lhip=-5;
+		state = 1;
+		break;
 	}
+	case '7':
+	{
+		/*shoulder = -9;
+		shoulder2 =9;
+		rshoulder2=9;
+		lshoulder2= -9;
+		elbow=9*4/3;
+		elbow2=-9*4/3;*/
+		trunk=-10;
+		lshoulder2=-10;
+		rshoulder2=10;
+		state = 2;
+		break;
+	}
+	}
+	glutPostRedisplay();
 }
+void timer(int val)
+{
+	int l=300;
+	int l2=300;
+	std::cout<<"state " <<state<<"\n";
+	if (val== 0)
+	{
+		trunk=0;
+		rshoulder2=0;
+		lshoulder2=0;
+		shoulder2 = 0;
+		rhip=0;
+		lhip=-0;
+		if (shoulder ==0 || shoulder ==-90)
+			step= -1*step;
+		shoulder = (shoulder - step) % 360;
+		//if (shoulder2 > 0)
+		//	shoulder2 = (shoulder2 - 10) % 360;
+		//else if (shoulder2 <= 0)
+		//	shoulder2 = (shoulder2 + 10) % 360;
+
+		std::cout<<"sh: " <<shoulder<<"\n";
+		
+		//glutPostRedisplay();
+		
+	}
+	else if (val== 1)
+	{
+		trunk=0;
+		rshoulder2=0;
+		lshoulder2=0;
+		if (lhip ==0 || lhip ==-45){
+			hstep= -1*hstep;
+		}
+		shoulder = (shoulder - 2*hstep) % 360;
+		shoulder2 = (shoulder2 + 2*hstep) % 360;
+		lhip = (lhip - hstep) % 360;
+		rhip = (rhip +hstep) % 360;
+		//if (shoulder2 > 0)
+		//	shoulder2 = (shoulder2 - 10) % 360;
+		//else if (shoulder2 <= 0)
+		//	shoulder2 = (shoulder2 + 10) % 360;
+
+		std::cout<<"sh: " <<shoulder<<"\n";
+		
+		//glutPostRedisplay();
+		
+	}
+	else if (val== 2)
+	{
+		shoulder = 0;
+		shoulder2 = 0;
+		rhip=0;
+		lhip=-0;
+		/*if(rshoulder2==90 || rshoulder2==0)
+		{
+			shstep*=-1;
+		}
+		shoulder = (shoulder - shstep) %360;
+		shoulder2 = (shoulder2 + shstep)% 360;
+		rshoulder2 = (rshoulder2 + shstep)% 360;
+		lshoulder2 = (lshoulder2 - shstep) %360;
+		elbow = (elbow + 4*shstep/3)% 360;
+		elbow2 = (elbow2 - 4*shstep/3)% 360;
+		glutPostRedisplay();*/
+		if(rshoulder2==90 || rshoulder2==0)
+		{
+			shstep*=-1;
+		}
+		rshoulder2 = (rshoulder2 + shstep)% 360;
+		lshoulder2 = (lshoulder2 - shstep) %360;
+		trunk = (trunk - shstep) %360;
+		
+	}
+	//std::cout<<"val: "<<val<<" state:= "<<state<<"\n";
+	if(val==state)	
+	glutPostRedisplay();
+	glutTimerFunc(40, timer,state);
+}
+
 void main_menu(int value)
 {
 	if (value == 666)
@@ -875,6 +968,8 @@ int main(int argc, char **argv)
 	glutAddMenuEntry("Ceramics", 4);
 	Animenu = glutCreateMenu(Animation_mode);
 	glutAddMenuEntry("Dumbbell", '5');
+	glutAddMenuEntry("Hip Hop", '6');
+	glutAddMenuEntry("Up Down", '7');
 	glutSpecialFunc(specialKeys);
 	glutCreateMenu(main_menu);
 	glutAddMenuEntry("Quit", 666);
@@ -882,8 +977,15 @@ int main(int argc, char **argv)
 	glutAddSubMenu("Animation mode", Animenu);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 	glutKeyboardFunc(keyboard);
-	glutTimerFunc(0, timer, 0);
-	glutTimerFunc(0, timer, 1);
+	int val=state;
+	std::cout<<val<<"\n";
+	//if (val==0){
+		glutTimerFunc(0, timer, state);
+		std::cout<<"done";//}
+	/*else
+		glutTimerFunc(0,timer,1);*/
+
+	//glutTimerFunc(0, timer, 1);
 
 	glutMainLoop();
 	return 0;
