@@ -70,4 +70,4 @@ int l2=300;
 
 ## Issues
 * We ran out of time due to the preperation for the wedding of our beloved friend's -Ahmed- sister and we had to stay up all the night to finish the task and push directly from the bed.
-![Nightcrawlers](images/DSC_2953.jpg)
+![Nightcrawlers](images/DSC_2953.JPG)
